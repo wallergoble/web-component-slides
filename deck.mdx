@@ -14,13 +14,22 @@ export { hack as theme } from 'mdx-deck/themes'
 ---
 
 <img src="./assets/platform.png" style={{height: '800px'}} />
+
+```notes
+- define Platform: tools natively available in the browser
+- using them lends to better:
+  - performance
+  - longevity
+  - support
+```
 ---
 # What is this talk?
 
 * What are Web Components?
-* Build our first vanilla web components
+* Look at core concepts and building blocks
+* Build our first vanilla Web Component
 * Explore use cases
-* Learn about web component compilers
+* Learn about web component 'compilers'
 
 ---
 
@@ -28,7 +37,7 @@ import { Split } from 'mdx-deck/layouts'
 
 # What are Web Components?
 
-Web components is a meta-specification made possible by four other specifications:
+Web components is a meta-specification:
 
 <ol>
   <Appear>
@@ -39,13 +48,23 @@ Web components is a meta-specification made possible by four other specification
   </Appear>
 </ol>
 
+```notes
+- Ask if everyone knows what a spec is
+- Appear
+```
+
 ---
 
 # ES Modules
 
 - Lots of drama (esm vs webpack vs regular script)
-- Possible pros: speed, standardization, code-splitting, import style syntax
+- Possible pros: speed
+- standardization
+- code-splitting, import style syntax
 
+---
+
+# ES Module importing
 e.g.
 ```
 <script type="module" src="cool-component.js"></script>
@@ -60,49 +79,78 @@ or
 </script>
 ```
 
-Actual usage of the imported code:
-```
-
-await customElements.define('cool-component', CoolComponent);
-
-const coolComponent = document.createElement('cool-component');
-
-document.appendChild(coolComponent);
-</script>
-```
-
 ```notes
-- Don't sweat too much on this part, not widely utilized
+- Covered only because the docs say it's a part
+- An 'optional' part of web components
 ```
 ---
 
-# Using HTML Templates
+# HTML Templates
+
+- Mechanism for reuse of similar mark up structures
+
+
+<ul>
+  <Appear>
+    <p>Pros:</p>
+    <li>Unused at page load, instantiated at runtime</li>
+    <li>Will not render until used</li>
+    <li>Will not fetch scripts tags </li>
+    <li>Will not load assets (images, svgs) </li>
+    <li>Will not appear on the DOM</li>
+  </Appear>
+</ul>
+
+```notes
+- appears
+- skeleton; view; reusable
+- performance implications
+- kind of not there?
+
+```
+---
 
 ```.jsx
-<template id="home-depot-icon">
-  <img src="logo.png">
+<template id="template__home-depot-logo">
+  <style>
+    .logo {
+      width: 50px;
+      height: 50px;
+      border: 1px solid white;
+    }
+  <style>
+  <a href="https://homedepot.com/">
+    <img src="logo.png" class="logo">
+  </a>
 </template>
+
 <script>
-  (() => {
-    const template = document.getElementById('home-depot-icon);
+  const template = document.getElementById('template__home-depot-logo);
 
-    // Modify the template
-    template.content.querySelector('img').alt = 'A really orange logo';
-
-    // Create an instance of the template
-    const clone = document.importNode(template.content);
-    document.body.appendChild(clone)
-  })
+  // You can modify the template before instantiation
+  template.content.querySelector('img').alt = 'A really orange logo';
+  // Create an instance of the template
+  const clone = document.importNode(template.content);
+  document.body.appendChild(clone)
 </script>
 ```
 
-Yields:
+---
+
 ```.jsx
 <body>
+    <style>
+      .logo {
+        width: 50px;
+        height: 50px;
+        border: 1px solid white;
+      }
+    <style>
     <img
       src="logo.png"
       alt="A really orange logo"
-    >
+      class="logo"
+    />
 </body>
 ```
 ```notes
@@ -111,15 +159,17 @@ Yields:
 ```
 ---
 
-
 # Custom Elements
 
 * Create your own HTML tags
-* Custom behaviors and styling
+* Powered by ES6 Classes
 
+* Implement custom behaviors and styling
 
-* \* Caveat:
-
+```notes
+- Bread and butter of what we think of as Web Components
+- Class API is nice
+```
 ---
 # Our First Custom Element
 
@@ -140,8 +190,8 @@ index.html
 - Problem: It doesn't do anything
 - Has none of the default styling of <button>
 - No onclick attribute, nothing
-- More of a building block
-- Useful just custom element: <well>
+
+- What if I do want my own button?
 ```
 ---
 # Extending Existing Tags with Custom Elements
@@ -160,19 +210,62 @@ index.html
 ```.jsx
 <button is="customized-button">Click Me :)</button>
 ```
+---
+
+# Custom Element Lifecycle methods
+
+## Run at certain points of the "life" of a component
+
+<ul>
+  <li> <code>connectedCallback</code> </li>
+    <ul>
+      <li> Runs when an element is connected to the DOM. i.e. instantiation </li>
+    </ul>
+
+  <li> <code>disconnectedCallback</code> </li>
+    <ul>
+      <li> Runs when an element is disconnected to the DOM. i.e. deleted (not hidden) </li>
+    </ul>
+
+  <li> <code>adoptedCallback</code> </li>
+    <ul>
+      <li> Runs when <code>document.adoptNode()</code> is used. Useful in the context of iframes </li>
+    </ul>
+
+  <li> <code>attributeChangedCallback</code> </li>
+    <ul>
+      <li> Runs when attributes on the custom element change </li>
+      <li> <strong> IMPORTANT</strong>: Does not do change detection </li>
+    </ul>
+</ul>
+
+
+```notes
+- connected and disconnected useful for managing memory leaks i.e. event listeners, observables
+- document.adoptNode() moves documents from one object to another
+
+Really cool because this is generally a thing we reach out to frameworks for
+
+Not trivial to Implement
+
+A little too primitive for me. cf. attributeChangedCallback
+```
 
 ---
 
 # Shadow DOM
 
 ## Encapsulation for the DOM
-Not supported originally
 
-Introduces problems with styling e.g.
+Usage: removing styling collisions e.g.
 * Ids
 * Naming
 * Cascading in general
 
+```notes
+- css sucks
+- joke: can't encapsulate code blocks
+```
 ---
 
 You can add shadow DOM to:
@@ -198,6 +291,10 @@ You can add shadow DOM to:
   <p> span </p>
 </Appear>
 
+```notes
+- lots of appears
+```
+
 ---
 # How To Shadow DOM
 
@@ -206,8 +303,16 @@ const main = document.createElement('main');
 const shadowRoot = main.attachShadow({mode: 'open'});
 shadowRoot.innerHTML = '<h1>Sneakin' around in the shadows</h1>';
 ```
+
+<Appear>
+  <p> Quiz! </p>
+  <p> If we changed <code>'open'</code> to <code>'closed'</code>, what do you think would happen?</p>
+  <p> <code> console.log(shadowRoot) // null </code> </p>
+</Appear>
+
+
 ```notes
-* Accessing the shadow root can be cut off completely by changing mode to 'closed'
+- Closed doesn't ever let you reference shadowRoot
 ```
 
 ---
@@ -250,16 +355,20 @@ export default Split
 <Appear>
   <p style={{ marginLeft: '10px'}}> Quiz! </p>
   <p style={{ marginLeft: '10px'}}> What color is the text "We sell hammers"? </p>
+  <p style={{ marginLeft: '10px'}}> White, duh </p>
   <p style={{ marginLeft: '10px'}}> What color is the background of "We sell hammers"? </p>
+  <p style={{ marginLeft: '10px'}}> Orange </p>
   <p style={{ marginLeft: '10px'}}> What would <code>document.getElementByClassName('.lowesify')</code> return? </p>
+  <p style={{ marginLeft: '10px'}}> <code> null </code> </p>
   <p style={{ marginLeft: '10px'}}> What would <code>document.getElementByClassName('test-element >>> .lowesify')</code> return? </p>
+  <p style={{ marginLeft: '10px'}}> <code> div.lowesify </code> </p>
 </Appear>
 
 ```notes
 - This view is from Dev Tools
 - Quiz answers:
 - white
-- dark-grey
+- orange
 - null
 - <div class="lowesify"></div>
 
@@ -295,8 +404,7 @@ cf. React Render Props, HOCs, Vue Slots, Angular ng-transcludes
 
 
 ```notes
-Want to change
-
+Slots allow for composition
 ```
 ---
 # Shadow DOM: Slots
@@ -304,21 +412,23 @@ Want to change
 `<my-header>` template:
 ```.jsx
 <header>
-  <h1><slot name="website-name"></slot></h1>
+  <h1><slot name="website-link"></slot></h1>
   <button>Menu</button>
 </header>
 ```
 Usage:
 ```.jsx
 <my-header>
-  Order Up
+  <a href="https://sell.apps.homedepot.com/"> Order Up </a>
 </my-header>
 ```
 
 Yields:
 ```.jsx
 <header>
-  <h1>Order Up</h1>
+  <h1>
+    <a href="https://sell.apps.homedepot.com/"> Order Up </a>
+  </h1>
   <button>Menu</button>
 </header>
 ```
@@ -330,23 +440,18 @@ Yields:
 
 ---
 
-# HTML Template
+# How to tie it all together
 
-- Mechanism for reuse of similar mark up structures
 
-Pros:
-<ul>
-  <Appear>
-    <li>Unused at page load, instantiated at runtime</li>
-    <li>Will not render untile used</li>
-    <li>Will not load scripts, </li>
-    <li>Will not appear on the DOM</li>
-  </Appear>
-</ul>
+<Appear>
+  <a
+    href="https://codepen.io/wallergo/pen/bQxzeo?editors=1000"
+    target="_blank"
+  >
+    <img src="./assets/dont-touch.png" />
+  </a>
+</Appear>
 
----
-
-<a href="https://codepen.io/wallergo/pen/bQxzeo?editors=1000" target="_blank">Click here for real code</a>
 ---
 
 # Vanilla Web Component In Review
@@ -400,8 +505,6 @@ Advantages:
 - Just a wrapper
 ```
 ---
-
-
 
 # Random Gotchas
 
