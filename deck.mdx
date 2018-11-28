@@ -1,16 +1,20 @@
 import { Appear } from 'mdx-deck'
 import { FullScreenCode } from 'mdx-deck'
 import { Image } from 'mdx-deck'
+import { SplitRight } from 'mdx-deck/layouts'
+
 
 import { Link } from './components/link'
 import { Header } from './components/header'
 
-export { hack as theme } from 'mdx-deck/themes'
+export { default as theme } from './theme'
 
 
 # Web Components
 ### How I learned to stop worrying and love the platform
 
+```notes
+```
 ---
 
 <img src="./assets/platform.png" style={{height: '800px'}} />
@@ -37,14 +41,14 @@ import { Split } from 'mdx-deck/layouts'
 
 # What are Web Components?
 
-Web components is a meta-specification:
+Web Components are a meta-specification:
 
 <ol>
   <Appear>
-    <li>The ES Module specification</li>
-    <li>The HTML Template specification</li>
-    <li>The Custom Elements specification</li>
-    <li>The Shadow DOM specification</li>
+    <li style={{textAlign: 'left'}}>The ES Module specification</li>
+    <li style={{textAlign: 'left'}}>The HTML Template specification</li>
+    <li style={{textAlign: 'left'}}>The Custom Elements specification</li>
+    <li style={{textAlign: 'left'}}>The Shadow DOM specification</li>
   </Appear>
 </ol>
 
@@ -66,12 +70,12 @@ Web components is a meta-specification:
 
 # ES Module importing
 e.g.
-```
+```jsx
 <script type="module" src="cool-component.js"></script>
 ```
 or
 
-```
+```jsx
 <script type="module">
   import 'cool-component.js';
   // or
@@ -93,11 +97,11 @@ or
 <ul>
   <Appear>
     <p>Pros:</p>
-    <li>Unused at page load, instantiated at runtime</li>
-    <li>Will not render until used</li>
-    <li>Will not fetch scripts tags </li>
-    <li>Will not load assets (images, svgs) </li>
-    <li>Will not appear on the DOM</li>
+    <li style={{textAlign: 'left'}}>Unused at page load, instantiated at runtime</li>
+    <li style={{textAlign: 'left'}}>Will not render until used</li>
+    <li style={{textAlign: 'left'}}>Will not fetch scripts tags </li>
+    <li style={{textAlign: 'left'}}>Will not load assets (images, svgs) </li>
+    <li style={{textAlign: 'left'}}>Will not appear on the DOM</li>
   </Appear>
 </ul>
 
@@ -106,11 +110,10 @@ or
 - skeleton; view; reusable
 - performance implications
 - kind of not there?
-
 ```
 ---
 
-```.jsx
+```jsx
 <template id="template__home-depot-logo">
   <style>
     .logo {
@@ -137,7 +140,7 @@ or
 
 ---
 
-```.jsx
+```jsx
 <body>
     <style>
       .logo {
@@ -174,7 +177,7 @@ or
 # Our First Custom Element
 
 myNewFancyButton.js
-```.js
+```js
 class MyNewFancyButton extends HTMLElement {
   ...
 }
@@ -182,7 +185,7 @@ customElements.define("my-new-fancy-button", MyNewFancyButton);
 ```
 
 index.html
-```.jsx
+```jsx
 <my-new-fancy-button> Enterprise Click Me® </my-new-fancy-button>
 ```
 
@@ -194,12 +197,12 @@ index.html
 - What if I do want my own button?
 ```
 ---
-# Extending Existing Tags with Custom Elements
+# Extending Existing Tags
 
 ### Customized Built Ins
 
 index.js
-```.js
+```js
 class CustomizedButton extends HTMLButtonElement {
   ...
 }
@@ -207,7 +210,7 @@ customElements.define("customized-button", CustomizedButton, { extends: "button"
 ```
 
 index.html
-```.jsx
+```jsx
 <button is="customized-button">Click Me :)</button>
 ```
 ---
@@ -217,25 +220,25 @@ index.html
 ## Run at certain points of the "life" of a component
 
 <ul>
-  <li> <code>connectedCallback</code> </li>
+  <li style={{textAlign: 'left'}} style={{textAlign: 'left'}}> connectedCallback </li>
     <ul>
-      <li> Runs when an element is connected to the DOM. i.e. instantiation </li>
+      <li style={{textAlign: 'left'}} style={{textAlign: 'left'}}> Runs when an element is connected to the DOM. i.e. instantiation </li>
     </ul>
 
-  <li> <code>disconnectedCallback</code> </li>
+  <li style={{textAlign: 'left'}} style={{textAlign: 'left'}}> disconnectedCallback </li>
     <ul>
-      <li> Runs when an element is disconnected to the DOM. i.e. deleted (not hidden) </li>
+      <li style={{textAlign: 'left'}} style={{textAlign: 'left'}}> Runs when an element is disconnected to the DOM. i.e. deleted (not hidden) </li>
     </ul>
 
-  <li> <code>adoptedCallback</code> </li>
+  <li style={{textAlign: 'left'}} style={{textAlign: 'left'}}> adoptedCallback </li>
     <ul>
-      <li> Runs when <code>document.adoptNode()</code> is used. Useful in the context of iframes </li>
+      <li style={{textAlign: 'left'}} style={{textAlign: 'left'}}> Runs when document.adoptNode() is used. Useful in the context of iframes </li>
     </ul>
 
-  <li> <code>attributeChangedCallback</code> </li>
+  <li style={{textAlign: 'left'}} style={{textAlign: 'left'}}> attributeChangedCallback </li>
     <ul>
-      <li> Runs when attributes on the custom element change </li>
-      <li> <strong> IMPORTANT</strong>: Does not do change detection </li>
+      <li style={{textAlign: 'left'}} style={{textAlign: 'left'}}> Runs when attributes on the custom element change </li>
+      <li style={{textAlign: 'left'}} style={{textAlign: 'left'}}> <strong> IMPORTANT</strong>: Does not do change detection </li>
     </ul>
 </ul>
 
@@ -271,24 +274,25 @@ Usage: removing styling collisions e.g.
 You can add shadow DOM to:
 <Appear>
   <p> <strong style={{ fontSize: '60px', fontWeight: 900}}> Any custom element </strong>  </p>
-  <p> article </p>
-  <p> aside </p>
-  <p> blockquote </p>
-  <p> body </p>
-  <p> div </p>
-  <p> footer </p>
-  <p> h1 </p>
-  <p> h2 </p>
-  <p> h3 </p>
-  <p> h4 </p>
-  <p> h5 </p>
-  <p> h6 </p>
-  <p> header </p>
-  <p> main </p>
-  <p> nav </p>
-  <p> p </p>
-  <p> section </p>
-  <p> span </p>
+  <p style={{ fontSize: '10px'}}> article </p>
+  <p style={{ fontSize: '10px'}}> aside </p>
+  <p style={{ fontSize: '10px'}}> blockquote </p>
+  <p style={{ fontSize: '10px'}}> body </p>
+  <p style={{ fontSize: '10px'}}> div </p>
+  <p style={{ fontSize: '10px'}}> footer </p>
+  <p style={{ fontSize: '10px'}}> h1 </p>
+  <p style={{ fontSize: '10px'}}> h2 </p>
+  <p style={{ fontSize: '10px'}}> h3 </p>
+  <p style={{ fontSize: '10px'}}> h4 </p>
+  <p style={{ fontSize: '10px'}}> h5 </p>
+  <p style={{ fontSize: '10px'}}> h6 </p>
+  <p style={{ fontSize: '10px'}}> header </p>
+  <p style={{ fontSize: '10px'}}> main </p>
+  <p style={{ fontSize: '10px'}}> nav </p>
+  <p style={{ fontSize: '10px'}}> p </p>
+  <p style={{ fontSize: '10px'}}> section </p>
+  <p style={{ fontSize: '10px'}}> span </p>
+  <p style={{ fontSize: '10px'}}> not code????????? </p>
 </Appear>
 
 ```notes
@@ -298,7 +302,7 @@ You can add shadow DOM to:
 ---
 # How To Shadow DOM
 
-```.js
+```js
 const main = document.createElement('main');
 const shadowRoot = main.attachShadow({mode: 'open'});
 shadowRoot.innerHTML = '<h1>Sneakin' around in the shadows</h1>';
@@ -318,24 +322,19 @@ shadowRoot.innerHTML = '<h1>Sneakin' around in the shadows</h1>';
 ---
 export default Split
 
-```.jsx
+```jsx
 <!-- global styles -->
 <style>
   :root {
     --lowes-blue: #1D1075;
     --depot-orange: #F96302;
   }
-
-  body {
-    color: white;
-  }
-
+  body { color: white; }
   .lowesify {
     background-color: var(--lowes-blue, deepblue);
     color: black;
   }
 </style>
-
 <test-element>
   #shadow-root
     <style>
@@ -344,7 +343,6 @@ export default Split
         background-color: var(--depot-orange, darkorange);
       }
     </style>
-
     <div class="lowesify">
       We sell hammers
     </div>
@@ -389,10 +387,10 @@ cf. React Render Props, HOCs, Vue Slots, Angular ng-transcludes
 
 ```
 ---
-# Shadow DOM: Slots
+### Shadow DOM: Slots
 
 `<my-header>` template:
-```.jsx
+```jsx
 <header>
   <h1>My Website</h1>
   <button>Menu</button>
@@ -407,24 +405,11 @@ cf. React Render Props, HOCs, Vue Slots, Angular ng-transcludes
 Slots allow for composition
 ```
 ---
-# Shadow DOM: Slots
 
-`<my-header>` template:
-```.jsx
-<header>
-  <h1><slot name="website-link"></slot></h1>
-  <button>Menu</button>
-</header>
-```
-Usage:
-```.jsx
-<my-header>
-  <a href="https://sell.apps.homedepot.com/"> Order Up </a>
-</my-header>
-```
+export default SplitRight
 
-Yields:
-```.jsx
+```jsx
+<!-- output -->
 <header>
   <h1>
     <a href="https://sell.apps.homedepot.com/"> Order Up </a>
@@ -432,16 +417,30 @@ Yields:
   <button>Menu</button>
 </header>
 ```
+
+```jsx
+<!-- template  -->
+<header>
+  <h1><slot name="website-link"></slot></h1>
+  <button>Menu</button>
+</header>
+```
+
+```jsx
+<!-- usage -->
+<my-header>
+  <a slot="website-link" href="https://sell.apps.homedepot.com/"> Order Up </a>
+</my-header>
+```
+
 ```notes
 - can name and specify multiple slots with name attribute
-- Appear themes
 - mention adding custom search bar in header, could be framework specific component
 ```
 
 ---
 
 # How to tie it all together
-
 
 <Appear>
   <a
@@ -452,30 +451,29 @@ Yields:
   </a>
 </Appear>
 
+```notes
+Things to look at in example
+- Use of lifecycle methods
+- Attribute code
+```
+
 ---
 
 # Vanilla Web Component In Review
 
-Pros:
-<ol>
-  <Appear>
-    <li>Use the Platform</li>
-    <li>Shadow DOM is 🔥🔥🔥</li>
-    <li>Lifecycle methods, while sparse, are great</li>
-  </Appear>
-</ol>
-
-Cons:
-<ol>
-  <Appear>
-    <li>Platform doesn't have any training wheels</li>
-    <li>Lots of boilerplate</li>
-    <li>Templates are awkward</li>
-    <li>Attribute management is awkward</li>
-    <li>Very imperative</li>
-    <li>Templates help, but code splitting/optimization not free</li>
-  </Appear>
-</ol>
+<Appear>
+  <h3>Pros:</h3>
+  <li style={{textAlign: 'left'}}>Use the Platform</li>
+  <li style={{textAlign: 'left'}}>Shadow DOM is 🔥🔥🔥</li>
+  <li style={{textAlign: 'left'}}>Lifecycle methods, while sparse, are great</li>
+  <h3>Cons:</h3>
+  <li style={{textAlign: 'left'}}>Platform doesn't have any training wheels</li>
+  <li style={{textAlign: 'left'}}>Lots of boilerplate</li>
+  <li style={{textAlign: 'left'}}>Templates are awkward</li>
+  <li style={{textAlign: 'left'}}>Attribute management is awkward</li>
+  <li style={{textAlign: 'left'}}>Very imperative</li>
+  <li style={{textAlign: 'left'}}>Templates help, but code splitting/optimization not free</li>
+</Appear>
 
 ---
 
@@ -492,6 +490,8 @@ Making Things Easier - Transpilers:
 
 # Stencil
 
+Made by Ionic team
+
 Advantages:
 * Declarative style
 * Less primitive lifecycle methods
@@ -505,15 +505,48 @@ Advantages:
 - Just a wrapper
 ```
 ---
+# Stencil Example
+
+<Appear>
+  <a
+    href="https://github.homedepot.com/AssistedSelling/ou-components/blob/master/packages/line-item/src/components/line-item-ids/line-item-ids.tsx"
+    target="_blank"
+  >
+    <img src="./assets/dont-touch.png" />
+  </a>
+</Appear>
+---
+
+# Summary
+
+* Reusability
+* Keep it simple
+* Design systems
+* Use the platform
+
+---
 
 # Random Gotchas
 
 <Appear>
-  <p> Attributes have to be camel-cased in the HTML, not doing so generally surfaces as randomly </p>
+  <p> Attributes <strong> CANNOT </strong> be camel-cased in the HTML </p>
 </Appear>
 
 ---
-### Sources
+
+# Please clap
+
+<Appear>
+  <p> Any questions? </p>
+</Appear>
+
+---
+
+# Sources
+
+### [Slides](https://github.com/wallergoble/web-component-slides)
+### [made with mdx-deck](https://github.com/jxnblk/mdx-deck)
+#### [Stencil Docs](https://stenciljs.com/docs/introduction)
 
 ##### [https://www.webcomponents.org/specs](https://www.webcomponents.org/specs)
 ##### [https://twitter.com/ken_wheeler](https://twitter.com/ken_wheeler)
