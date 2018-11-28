@@ -1,0 +1,418 @@
+import { Appear } from 'mdx-deck'
+import { FullScreenCode } from 'mdx-deck'
+import { Image } from 'mdx-deck'
+
+import { Link } from './components/link'
+import { Header } from './components/header'
+
+export { hack as theme } from 'mdx-deck/themes'
+
+
+# Web Components
+### How I learned to stop worrying and love the platform
+
+---
+
+<img src="./assets/platform.png" style={{height: '800px'}} />
+---
+# What is this talk?
+
+* What are Web Components?
+* Build our first vanilla web components
+* Explore use cases
+* Learn about web component compilers
+
+---
+
+import { Split } from 'mdx-deck/layouts'
+
+# What are Web Components?
+
+Web components is a meta-specification made possible by four other specifications:
+
+<ol>
+  <Appear>
+    <li>The ES Module specification</li>
+    <li>The HTML Template specification</li>
+    <li>The Custom Elements specification</li>
+    <li>The Shadow DOM specification</li>
+  </Appear>
+</ol>
+
+---
+
+# ES Modules
+
+- Lots of drama (esm vs webpack vs regular script)
+- Possible pros: speed, standardization, code-splitting, import style syntax
+
+e.g.
+```
+<script type="module" src="cool-component.js"></script>
+```
+or
+
+```
+<script type="module">
+  import 'cool-component.js';
+  // or
+  import { CoolComponent } from '@orderup/cool-component';
+</script>
+```
+
+Actual usage of the imported code:
+```
+
+await customElements.define('cool-component', CoolComponent);
+
+const coolComponent = document.createElement('cool-component');
+
+document.appendChild(coolComponent);
+</script>
+```
+
+```notes
+- Don't sweat too much on this part, not widely utilized
+```
+---
+
+# Using HTML Templates
+
+```.jsx
+<template id="home-depot-icon">
+  <img src="logo.png">
+</template>
+<script>
+  (() => {
+    const template = document.getElementById('home-depot-icon);
+
+    // Modify the template
+    template.content.querySelector('img').alt = 'A really orange logo';
+
+    // Create an instance of the template
+    const clone = document.importNode(template.content);
+    document.body.appendChild(clone)
+  })
+</script>
+```
+
+Yields:
+```.jsx
+<body>
+    <img
+      src="logo.png"
+      alt="A really orange logo"
+    >
+</body>
+```
+```notes
+- Not particularly useful on it's own
+- The view of a Custom Element
+```
+---
+
+
+# Custom Elements
+
+* Create your own HTML tags
+* Custom behaviors and styling
+
+
+* \* Caveat:
+
+---
+# Our First Custom Element
+
+myNewFancyButton.js
+```.js
+class MyNewFancyButton extends HTMLElement {
+  ...
+}
+customElements.define("my-new-fancy-button", MyNewFancyButton);
+```
+
+index.html
+```.jsx
+<my-new-fancy-button> Enterprise Click Me® </my-new-fancy-button>
+```
+
+```notes
+- Problem: It doesn't do anything
+- Has none of the default styling of <button>
+- No onclick attribute, nothing
+- More of a building block
+- Useful just custom element: <well>
+```
+---
+# Extending Existing Tags with Custom Elements
+
+### Customized Built Ins
+
+index.js
+```.js
+class CustomizedButton extends HTMLButtonElement {
+  ...
+}
+customElements.define("customized-button", CustomizedButton, { extends: "button" });
+```
+
+index.html
+```.jsx
+<button is="customized-button">Click Me :)</button>
+```
+
+---
+
+# Shadow DOM
+
+## Encapsulation for the DOM
+Not supported originally
+
+Introduces problems with styling e.g.
+* Ids
+* Naming
+* Cascading in general
+
+---
+
+You can add shadow DOM to:
+<Appear>
+  <p> <strong style={{ fontSize: '60px', fontWeight: 900}}> Any custom element </strong>  </p>
+  <p> article </p>
+  <p> aside </p>
+  <p> blockquote </p>
+  <p> body </p>
+  <p> div </p>
+  <p> footer </p>
+  <p> h1 </p>
+  <p> h2 </p>
+  <p> h3 </p>
+  <p> h4 </p>
+  <p> h5 </p>
+  <p> h6 </p>
+  <p> header </p>
+  <p> main </p>
+  <p> nav </p>
+  <p> p </p>
+  <p> section </p>
+  <p> span </p>
+</Appear>
+
+---
+# How To Shadow DOM
+
+```.js
+const main = document.createElement('main');
+const shadowRoot = main.attachShadow({mode: 'open'});
+shadowRoot.innerHTML = '<h1>Sneakin' around in the shadows</h1>';
+```
+```notes
+* Accessing the shadow root can be cut off completely by changing mode to 'closed'
+```
+
+---
+export default Split
+
+```.jsx
+<!-- global styles -->
+<style>
+  :root {
+    --lowes-blue: #1D1075;
+    --depot-orange: #F96302;
+  }
+
+  body {
+    color: white;
+  }
+
+  .lowesify {
+    background-color: var(--lowes-blue, deepblue);
+    color: black;
+  }
+</style>
+
+<test-element>
+  #shadow-root
+    <style>
+      div {
+        color: white;
+        background-color: var(--depot-orange, darkorange);
+      }
+    </style>
+
+    <div class="lowesify">
+      We sell hammers
+    </div>
+</test-element>
+```
+<style>
+</style>
+<Appear>
+  <p style={{ marginLeft: '10px'}}> Quiz! </p>
+  <p style={{ marginLeft: '10px'}}> What color is the text "We sell hammers"? </p>
+  <p style={{ marginLeft: '10px'}}> What color is the background of "We sell hammers"? </p>
+  <p style={{ marginLeft: '10px'}}> What would <code>document.getElementByClassName('.lowesify')</code> return? </p>
+  <p style={{ marginLeft: '10px'}}> What would <code>document.getElementByClassName('test-element >>> .lowesify')</code> return? </p>
+</Appear>
+
+```notes
+- This view is from Dev Tools
+- Quiz answers:
+- white
+- dark-grey
+- null
+- <div class="lowesify"></div>
+
+- shadow piercing selector
+
+- key idea: you can't get through it!
+```
+
+---
+# Shadow DOM: Slots
+
+Mechanism for composition
+
+cf. React Render Props, HOCs, Vue Slots, Angular ng-transcludes
+
+
+```notes
+
+```
+---
+# Shadow DOM: Slots
+
+`<my-header>` template:
+```.jsx
+<header>
+  <h1>My Website</h1>
+  <button>Menu</button>
+</header>
+```
+<Appear>
+  <p> What if we want to change the content of the h1 tag dynamically? </p>
+</Appear>
+
+
+```notes
+Want to change
+
+```
+---
+# Shadow DOM: Slots
+
+`<my-header>` template:
+```.jsx
+<header>
+  <h1><slot name="website-name"></slot></h1>
+  <button>Menu</button>
+</header>
+```
+Usage:
+```.jsx
+<my-header>
+  Order Up
+</my-header>
+```
+
+Yields:
+```.jsx
+<header>
+  <h1>Order Up</h1>
+  <button>Menu</button>
+</header>
+```
+```notes
+- can name and specify multiple slots with name attribute
+- Appear themes
+- mention adding custom search bar in header, could be framework specific component
+```
+
+---
+
+# HTML Template
+
+- Mechanism for reuse of similar mark up structures
+
+Pros:
+<ul>
+  <Appear>
+    <li>Unused at page load, instantiated at runtime</li>
+    <li>Will not render untile used</li>
+    <li>Will not load scripts, </li>
+    <li>Will not appear on the DOM</li>
+  </Appear>
+</ul>
+
+---
+
+<a href="https://codepen.io/wallergo/pen/bQxzeo?editors=1000" target="_blank">Click here for real code</a>
+---
+
+# Vanilla Web Component In Review
+
+Pros:
+<ol>
+  <Appear>
+    <li>Use the Platform</li>
+    <li>Shadow DOM is 🔥🔥🔥</li>
+    <li>Lifecycle methods, while sparse, are great</li>
+  </Appear>
+</ol>
+
+Cons:
+<ol>
+  <Appear>
+    <li>Platform doesn't have any training wheels</li>
+    <li>Lots of boilerplate</li>
+    <li>Templates are awkward</li>
+    <li>Attribute management is awkward</li>
+    <li>Very imperative</li>
+    <li>Templates help, but code splitting/optimization not free</li>
+  </Appear>
+</ol>
+
+---
+
+Making Things Easier - Transpilers:
+
+* Angular Elements
+* Stencil.js
+* Polymer
+* Hybrids
+* LitElement
+* Slim.js
+
+---
+
+# Stencil
+
+Advantages:
+* Declarative style
+* Less primitive lifecycle methods
+* Easy property syntax
+* Code splitting out of the box
+* Typescript out of the box
+* Build, test, wired up out of the box
+* < 3kb gzipped bundle
+
+```notes
+- Just a wrapper
+```
+---
+
+
+
+# Random Gotchas
+
+<Appear>
+  <p> Attributes have to be camel-cased in the HTML, not doing so generally surfaces as randomly </p>
+</Appear>
+
+---
+### Sources
+
+##### [https://www.webcomponents.org/specs](https://www.webcomponents.org/specs)
+##### [https://twitter.com/ken_wheeler](https://twitter.com/ken_wheeler)
+##### [https://angular.io/guide/elements](https://angular.io/guide/elements)
+##### [https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_templates_and_slots](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_templates_and_slots)

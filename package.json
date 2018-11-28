@@ -1,0 +1,21 @@
+{
+  "name": "web-component",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "mdx-deck deck.mdx",
+    "prebuild": "rimraf dist",
+    "build": "npm run build:site && npm run build:pdf",
+    "build:site": "mdx-deck build deck.mdx",
+    "build:pdf": "mdx-deck pdf deck.mdx"
+  },
+  "keywords": [],
+  "author": "Waller Goble",
+  "license": "MIT",
+  "devDependencies": {
+    "mdx-deck": "^1.7.14",
+    "rimraf": "^2.6.2"
+  },
+  "dependencies": {}
+}
