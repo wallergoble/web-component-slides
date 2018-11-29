@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "mdx-deck deck.mdx",
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf dist && npm run move-assets",
+    "move-assets": "mkdir dist && cp -r assets/. dist/assets",
     "build": "npm run build:site && npm run build:pdf",
     "build:site": "mdx-deck build deck.mdx",
     "build:pdf": "mdx-deck pdf deck.mdx"
